@@ -21,10 +21,10 @@ else
     ant clean 1> /dev/null
     ant debug 1> /dev/null
     echo "4. install APK ..."
+    echo "----------"
     adb devices | grep -w "device" 1> /dev/null
     if [[ $? -eq 0 ]]; then
-        adb install -r bin/${apkName}-debug.apk &> /dev/null
-        echo "Success!"
+        adb install -r bin/${apkName}-debug.apk
     else
         echo "Error: device NOT found!"
     fi
