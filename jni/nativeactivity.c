@@ -63,7 +63,7 @@ int init_display(struct engine* engine) {
     engine->surface = surface;
     engine->width = w;
     engine->height = h;
-    LOGI("width=%d\theight=%d\n", engine->width, engine->height);
+    LOGI("Screen resolution: width = %d, height = %d\n", engine->width, engine->height);
 
     // Initialize GL state.
     glHint(GL_PERSPECTIVE_CORRECTION_HINT, GL_FASTEST);
@@ -108,7 +108,7 @@ int32_t handle_input(struct android_app* app, AInputEvent* event) {
     if (AInputEvent_getType(event) == AINPUT_EVENT_TYPE_MOTION) {
         engine->touchX = AMotionEvent_getX(event, 0);
         engine->touchY = AMotionEvent_getY(event, 0);
-        LOGI("x %d\ty %d\n", engine->touchX, engine->touchY);
+        LOGI("[%s] x = %d, y = %d\n", __func__, engine->touchX, engine->touchY);
         return 1;
     }
     return 0;
@@ -118,18 +118,24 @@ int32_t handle_input(struct android_app* app, AInputEvent* event) {
 void handle_cmd(struct android_app* app, int32_t cmd) {
     struct engine* engine = (struct engine*)app->userData;
     switch (cmd) {
-    case APP_CMD_INIT_WINDOW :
+    case APP_CMD_INIT_WINDOW:
         // The window is being shown, get it ready.
         if (engine->app->window != NULL) {
+            LOGI("[%s] init window", __func__);
             init_display(engine);
             draw_frame(engine);
         }
         break;
-    case APP_CMD_TERM_WINDOW :
+    case APP_CMD_TERM_WINDOW:
         // The window is being hidden or closed, clean it up.
+        LOGI("[%s] term window", __func__);
         terminate_display(engine);
         break;
-    case APP_CMD_LOST_FOCUS :
+    case APP_CMD_GAINED_FOCUS:
+        LOGI("[%s] gain focus", __func__);
+        break;
+    case APP_CMD_LOST_FOCUS:
+        LOGI("[%s] lost focus", __func__);
         draw_frame(engine);
         break;
     }
